@@ -24,7 +24,7 @@
 ### Creating a New Grammar
 
 **Define Grammar:**
-1. Click "📝 Definir Nueva Gramática"  
+1. Click "Definir Nueva Gramática"  
 2. Enter non-terminals separated by commas (e.g., S,A,B)  
 3. Enter terminals separated by commas (e.g., a,b)  
 4. Specify the start symbol (must be a non-terminal)  
