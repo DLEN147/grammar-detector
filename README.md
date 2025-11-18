@@ -72,7 +72,7 @@ The analyzer automatically classifies grammars according to Chomsky Hierarchy:
 3. Saved in JSON format with complete information  
 
 ### Load Grammar
-1. Click "📂 Cargar Gramática"  
+1. Click "Cargar Gramática"  
 2. Select JSON file  
 3. Grammar is loaded and automatically classified  
 
@@ -94,7 +94,7 @@ The analyzer automatically classifies grammars according to Chomsky Hierarchy:
 ### View Information
 
 **Grammar details:**
-1. Click "ℹ️ Mostrar Información"  
+1. Click "Mostrar Información"  
 2. Displays complete quintuple:
    - Non-terminals (N)
    - Terminals (T)
