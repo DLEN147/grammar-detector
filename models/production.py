@@ -4,7 +4,6 @@ from typing import List
 # Comentarios en español; nombres en inglés
 
 class Production:
-    """Representa una producción: left -> right1 | right2 | ..."""
     def __init__(self, left: str, rights: List[str]):
         self.left = left
         self.rights = list(rights)

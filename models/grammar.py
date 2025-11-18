@@ -6,10 +6,7 @@ from typing import Dict, List, Set, Tuple, Optional
 # Comentarios en español, código en inglés
 
 class Grammar:
-    """Clase para representar y analizar gramáticas formales.
-       Mantiene la misma lógica del script original pero con nombres en inglés.
-    """
-
+    
     def __init__(self, nonterminals: Set[str], terminals: Set[str],
                  productions: Dict[str, List[str]], start_symbol: str):
         # Conjuntos y producciones
@@ -22,7 +19,6 @@ class Grammar:
         self.type = self._classify_grammar()
 
     def _classify_grammar(self) -> int:
-        """Clasifica la gramática según Chomsky. Retorna 0,1,2 o 3"""
         is_type_3 = True
         is_type_2 = True
         is_type_1 = True
@@ -74,7 +70,6 @@ class Grammar:
         return nombres[self.type]
 
     def parse(self, string: str) -> Tuple[bool, Optional[dict]]:
-        """Determina si una cadena pertenece al lenguaje."""
         if self.type == 3:
             return self._parse_type3(string)
         elif self.type == 2:
@@ -250,7 +245,6 @@ class Grammar:
         }
 
     def generate_strings(self, n: int = 10) -> List[str]:
-        """Genera las n cadenas más cortas del lenguaje usando BFS"""
         strings: List[str] = []
         queue = deque([self.S])
         visited = {self.S}
@@ -311,7 +305,6 @@ class Grammar:
 
     # ------------------ Persistence (methods wrapper) ------------------
     def save(self, filename: str):
-        """Guarda la gramática en formato JSON"""
         data = {
             "nonterminals": list(self.N),
             "terminals": list(self.T),
@@ -325,7 +318,6 @@ class Grammar:
 
     @staticmethod
     def load(filename: str) -> 'Grammar':
-        """Carga una gramática desde un JSON"""
         with open(filename, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
