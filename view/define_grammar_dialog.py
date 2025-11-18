@@ -25,19 +25,16 @@ class DefineGrammarDialog:
             row=0, column=0, sticky=tk.W, pady=5)
         self.nonterm_entry = ttk.Entry(main_frame, width=40)
         self.nonterm_entry.grid(row=0, column=1, sticky="ew", pady=5)
-        self.nonterm_entry.insert(0, "S,A,B")
 
         ttk.Label(main_frame, text="Terminales (separados por comas):").grid(
             row=1, column=0, sticky=tk.W, pady=5)
         self.term_entry = ttk.Entry(main_frame, width=40)
         self.term_entry.grid(row=1, column=1, sticky="ew", pady=5)
-        self.term_entry.insert(0, "a,b")
 
         ttk.Label(main_frame, text="Símbolo inicial:").grid(
             row=2, column=0, sticky=tk.W, pady=5)
         self.start_entry = ttk.Entry(main_frame, width=40)
         self.start_entry.grid(row=2, column=1, sticky="ew", pady=5)
-        self.start_entry.insert(0, "S")
 
         # --- Producciones ---
         ttk.Separator(main_frame, orient='horizontal').grid(
@@ -52,25 +49,18 @@ class DefineGrammarDialog:
         prod_frame.columnconfigure(1, weight=1)
         prod_frame.columnconfigure(3, weight=1)
 
-        ttk.Label(prod_frame, text="Lado izquierdo:").grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(prod_frame, text="Lado No Terminal:").grid(row=0, column=0, sticky=tk.W)
         self.left_entry = ttk.Entry(prod_frame, width=15)
         self.left_entry.grid(row=0, column=1, sticky="ew", padx=(0, 15))
 
-        ttk.Label(prod_frame, text="→").grid(row=0, column=2, padx=5)
 
-        ttk.Label(prod_frame, text="Lado derecho:").grid(row=0, column=3, sticky=tk.W)
-        self.right_entry = ttk.Entry(prod_frame, width=20)
+        ttk.Label(prod_frame, text="Produce:").grid(row=0, column=2, sticky=tk.W)
+        self.right_entry = ttk.Entry(prod_frame, width=40)
         self.right_entry.grid(row=0, column=4, sticky="ew")
 
         ttk.Button(prod_frame, text="Agregar", command=self.add_production).grid(
             row=0, column=5, padx=(10, 0))
 
-        info_label = ttk.Label(
-            prod_frame,
-            text="Usa 'ε' para producción vacía. Ejemplo: S → aSb",
-            font=('Arial', 8, 'italic')
-        )
-        info_label.grid(row=1, column=0, columnspan=6, sticky=tk.W, pady=(5, 0))
 
         # --- Lista ---
         list_frame = ttk.LabelFrame(main_frame, text="Producciones Definidas", padding="10")
