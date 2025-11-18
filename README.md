@@ -1,4 +1,4 @@
-# User Manual - Universal Formal Grammar Analyzer
+# User Manual - Grammar Analyzer
 
 ## Project Information
 
