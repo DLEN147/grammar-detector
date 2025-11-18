@@ -9,91 +9,66 @@ class GrammarAnalyzerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Analizador Universal de Gramáticas Formales")
-        self.root.geometry("1000x700")
+        self.root.geometry("400x450")
         self.root.configure(bg='#f0f0f0')
+        self.root.resizable(False, False)
         
         self.grammar: Optional[Grammar] = None
         
         # Estilo
         style = ttk.Style()
         style.theme_use('clam')
-        style.configure('Title.TLabel', font=('Arial', 16, 'bold'), background='#f0f0f0')
-        style.configure('Info.TLabel', font=('Arial', 10), background='#f0f0f0')
-        style.configure('TButton', font=('Arial', 10))
+        style.configure('Title.TLabel', font=('Arial', 14, 'bold'), background='#f0f0f0')
+        style.configure('Info.TLabel', font=('Arial', 9), background='#f0f0f0')
+        style.configure('TButton', font=('Arial', 10), padding=10)
         
         self.create_widgets()
     
     def create_widgets(self):
         # Frame principal
-        main_frame = ttk.Frame(self.root, padding="10")
+        main_frame = ttk.Frame(self.root, padding="20")
         main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
-        main_frame.columnconfigure(1, weight=1)
-        main_frame.rowconfigure(2, weight=1)
         
         # Título
-        title_label = ttk.Label(main_frame, text="ANALIZADOR UNIVERSAL DE GRAMÁTICAS FORMALES", 
-                                style='Title.TLabel')
-        title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        title_label = ttk.Label(main_frame, 
+                                text="ANALIZADOR DE\nGRAMÁTICAS FORMALES", 
+                                style='Title.TLabel',
+                                justify='center')
+        title_label.grid(row=0, column=0, pady=(0, 15))
         
         # Label de estado de gramática
-        self.status_label = ttk.Label(main_frame, text="No hay gramática cargada", 
-                                      style='Info.TLabel', foreground='red')
-        self.status_label.grid(row=1, column=0, columnspan=2, pady=(0, 10))
+        self.status_label = ttk.Label(main_frame, 
+                                      text="No hay gramática cargada", 
+                                      style='Info.TLabel', 
+                                      foreground='red',
+                                      justify='center')
+        self.status_label.grid(row=1, column=0, pady=(0, 20))
         
-        # Panel izquierdo - Botones principales
-        left_frame = ttk.LabelFrame(main_frame, text="Opciones", padding="10")
-        left_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 5))
-        
+        # Botones principales
         buttons = [
-            ("Definir Nueva Gramática", self.define_grammar),
-            ("Cargar Gramática", self.load_grammar_file),
-            ("Guardar Gramática", self.save_grammar_file),
-            ("Mostrar Información", self.show_grammar_info),
-            ("Árbol de Síntesis", self.show_syntax_tree),
-            ("Evaluar Cadena", self.evaluate_string),
-            ("Generar Cadenas", self.generate_strings),
+            ("📝 Definir Nueva Gramática", self.define_grammar),
+            ("📂 Cargar Gramática", self.load_grammar_file),
+            ("💾 Guardar Gramática", self.save_grammar_file),
+            ("ℹ️  Mostrar Información", self.show_grammar_info),
+            ("🌳 Árbol de Síntesis", self.show_syntax_tree),
+            ("✓ Evaluar Cadena", self.evaluate_string),
+            ("🔤 Generar Cadenas", self.generate_strings),
         ]
         
-        for i, (text, command) in enumerate(buttons):
-            btn = ttk.Button(left_frame, text=text, command=command, width=25)
-            btn.grid(row=i, column=0, pady=5, padx=5, sticky=(tk.W, tk.E))
+        for i, (text, command) in enumerate(buttons, start=2):
+            btn = ttk.Button(main_frame, text=text, command=command, width=30)
+            btn.grid(row=i, column=0, pady=5, sticky=(tk.W, tk.E))
         
-        # Panel derecho - Área de resultados
-        right_frame = ttk.LabelFrame(main_frame, text="Resultados", padding="10")
-        right_frame.grid(row=2, column=1, sticky=(tk.W, tk.E, tk.N, tk.S))
-        right_frame.columnconfigure(0, weight=1)
-        right_frame.rowconfigure(0, weight=1)
-        
-        self.output_text = scrolledtext.ScrolledText(right_frame, wrap=tk.WORD, 
-                                                      font=('Courier', 10), 
-                                                      bg='#ffffff', fg='#000000')
-        self.output_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        
-        self.print_welcome()
-    
-    def print_welcome(self):
-        welcome = """╔═══════════════════════════════════════════════════╗
-║   Bienvenido al Analizador de Gramáticas Formales   ║
-╚═══════════════════════════════════════════════════╝
-
-Este sistema permite:
-• Definir gramáticas formales (Tipo 0-3 de Chomsky)
-• Evaluar si cadenas pertenecen al lenguaje
-• Generar cadenas del lenguaje
-• Visualizar árboles de derivación
-• Guardar y cargar gramáticas
-
-Comience definiendo o cargando una gramática.
-"""
-        self.output_text.insert(tk.END, welcome)
+        # Centrar contenido
+        main_frame.grid_columnconfigure(0, weight=1)
     
     def update_status(self):
         if self.grammar:
             self.status_label.config(
-                text=f"Gramática cargada: {self.grammar.get_type_name()}",
+                text=f"✓ {self.grammar.get_type_name()}",
                 foreground='green'
             )
         else:
@@ -101,13 +76,6 @@ Comience definiendo o cargando una gramática.
                 text="No hay gramática cargada",
                 foreground='red'
             )
-    
-    def clear_output(self):
-        self.output_text.delete(1.0, tk.END)
-    
-    def write_output(self, text):
-        self.output_text.insert(tk.END, text + "\n")
-        self.output_text.see(tk.END)
     
     def define_grammar(self):
         dialog = DefineGrammarDialog(self.root)
@@ -122,10 +90,8 @@ Comience definiendo o cargando una gramática.
                     dialog.result['start_symbol']
                 )
                 self.update_status()
-                self.clear_output()
-                self.write_output(f"✓ Gramática creada exitosamente")
-                self.write_output(f"Tipo: {self.grammar.get_type_name()}\n")
-                self.show_grammar_info()
+                messagebox.showinfo("Éxito", 
+                                   f"Gramática creada exitosamente\n\n{self.grammar.get_type_name()}")
             except Exception as e:
                 messagebox.showerror("Error", f"Error al crear gramática: {e}")
     
@@ -138,10 +104,8 @@ Comience definiendo o cargando una gramática.
             try:
                 self.grammar = load_grammar(filename)
                 self.update_status()
-                self.clear_output()
-                self.write_output(f"✓ Gramática cargada desde: {filename}")
-                self.write_output(f"Tipo: {self.grammar.get_type_name()}\n")
-                self.show_grammar_info()
+                messagebox.showinfo("Éxito", 
+                                   f"Gramática cargada exitosamente\n\n{self.grammar.get_type_name()}")
             except Exception as e:
                 messagebox.showerror("Error", f"Error al cargar: {e}")
     
@@ -158,7 +122,7 @@ Comience definiendo o cargando una gramática.
         if filename:
             try:
                 save_grammar(self.grammar, filename)
-                self.write_output(f"\n✓ Gramática guardada en: {filename}")
+                messagebox.showinfo("Éxito", f"Gramática guardada en:\n{filename}")
             except Exception as e:
                 messagebox.showerror("Error", f"Error al guardar: {e}")
     
@@ -167,81 +131,14 @@ Comience definiendo o cargando una gramática.
             messagebox.showwarning("Advertencia", "Primero debe definir o cargar una gramática")
             return
         
-        self.clear_output()
-        self.write_output("═" * 60)
-        self.write_output("INFORMACIÓN DE LA GRAMÁTICA")
-        self.write_output("═" * 60)
-        self.write_output(f"\nTipo: {self.grammar.get_type_name()}")
-        self.write_output(f"\nNo terminales (N): {', '.join(sorted(self.grammar.N))}")
-        self.write_output(f"Terminales (T): {', '.join(sorted(self.grammar.T))}")
-        self.write_output(f"Símbolo inicial (S): {self.grammar.S}")
-        self.write_output("\nProducciones (P):")
-        for left, prods in sorted(self.grammar.P.items()):
-            self.write_output(f"  {left} → {' | '.join(prods)}")
-        self.write_output("\n" + "═" * 60)
+        InfoWindow(self.root, self.grammar)
     
     def show_syntax_tree(self):
         if not self.grammar:
             messagebox.showwarning("Advertencia", "Primero debe definir o cargar una gramática")
             return
         
-        self.clear_output()
-        self.write_output("═" * 60)
-        self.write_output("ÁRBOL DE SÍNTESIS DE LA GRAMÁTICA")
-        self.write_output("═" * 60)
-        self.write_output(f"\nGramática: {self.grammar.get_type_name()}")
-        self.write_output(f"Símbolo inicial: {self.grammar.S}\n")
-        self.write_output("Estructura de producciones:\n")
-        
-        # Crear representación visual del árbol de síntesis
-        self._print_syntax_tree(self.grammar.S, "", set())
-        
-        self.write_output("\n" + "═" * 60)
-    
-    def _print_syntax_tree(self, symbol, prefix, visited):
-        """Imprime recursivamente el árbol de síntesis de la gramática"""
-        if symbol in visited:
-            self.write_output(f"{prefix}├─ {symbol} (ya visitado)")
-            return
-        
-        if symbol not in self.grammar.N:
-            # Es un terminal
-            self.write_output(f"{prefix}└─ {symbol} (terminal)")
-            return
-        
-        visited.add(symbol)
-        
-        if symbol not in self.grammar.P:
-            self.write_output(f"{prefix}└─ {symbol} (sin producciones)")
-            return
-        
-        productions = self.grammar.P[symbol]
-        self.write_output(f"{prefix}├─ {symbol}")
-        
-        for i, prod in enumerate(productions):
-            is_last = (i == len(productions) - 1)
-            connector = "└─" if is_last else "├─"
-            new_prefix = prefix + ("   " if is_last else "│  ")
-            
-            if prod == 'ε':
-                self.write_output(f"{prefix}│  {connector} ε (vacío)")
-            else:
-                self.write_output(f"{prefix}│  {connector} {prod}")
-                
-                # Analizar símbolos en la producción
-                symbols_in_prod = []
-                for char in prod:
-                    if char in self.grammar.N or char in self.grammar.T:
-                        if char not in symbols_in_prod:
-                            symbols_in_prod.append(char)
-                
-                # Expandir símbolos no terminales recursivamente
-                for j, sym in enumerate(symbols_in_prod):
-                    if sym in self.grammar.N:
-                        is_last_symbol = (j == len(symbols_in_prod) - 1)
-                        symbol_prefix = new_prefix + ("   " if is_last else "│  ")
-                        self.write_output(f"{symbol_prefix}│")
-                        self._print_syntax_tree(sym, symbol_prefix, visited.copy())
+        SyntaxTreeWindow(self.root, self.grammar)
     
     def evaluate_string(self):
         if not self.grammar:
@@ -252,29 +149,7 @@ Comience definiendo o cargando una gramática.
         self.root.wait_window(dialog.top)
         
         if dialog.result is not None:
-            string = dialog.result
-            self.clear_output()
-            self.write_output("═" * 60)
-            self.write_output("EVALUACIÓN DE CADENA")
-            self.write_output("═" * 60)
-            self.write_output(f"\nCadena a evaluar: '{string}'")
-            self.write_output("Analizando...\n")
-            
-            try:
-                accepted, tree = self.grammar.parse(string)
-                
-                if accepted:
-                    self.write_output("✓ CADENA ACEPTADA\n")
-                    self.write_output("Árbol de derivación:")
-                    self.write_output("-" * 60)
-                    self.write_output(self.grammar.visualize_tree(tree))
-                else:
-                    self.write_output("✗ CADENA RECHAZADA")
-                    self.write_output("\nLa cadena no pertenece al lenguaje generado por la gramática.")
-            except Exception as e:
-                self.write_output(f"✗ Error durante el análisis: {e}")
-            
-            self.write_output("═" * 60)
+            EvaluateResultWindow(self.root, self.grammar, dialog.result)
     
     def generate_strings(self):
         if not self.grammar:
@@ -285,23 +160,246 @@ Comience definiendo o cargando una gramática.
         self.root.wait_window(dialog.top)
         
         if dialog.result:
-            n = dialog.result
-            self.clear_output()
-            self.write_output("═" * 60)
-            self.write_output("GENERACIÓN DE CADENAS")
-            self.write_output("═" * 60)
-            self.write_output(f"\nGenerando las {n} cadenas más cortas del lenguaje...")
+            GenerateResultWindow(self.root, self.grammar, dialog.result)
+
+
+class InfoWindow:
+    def __init__(self, parent, grammar):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Información de la Gramática")
+        self.window.geometry("600x500")
+        self.window.transient(parent)
+        
+        # Frame principal
+        main_frame = ttk.Frame(self.window, padding="15")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(1, weight=1)
+        
+        # Título
+        title = ttk.Label(main_frame, text="INFORMACIÓN DE LA GRAMÁTICA", 
+                         font=('Arial', 12, 'bold'))
+        title.grid(row=0, column=0, pady=(0, 10))
+        
+        # Área de texto
+        text_area = scrolledtext.ScrolledText(main_frame, wrap=tk.WORD, 
+                                              font=('Courier', 10),
+                                              bg='#ffffff', fg='#000000')
+        text_area.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Contenido
+        text_area.insert(tk.END, "═" * 60 + "\n")
+        text_area.insert(tk.END, f"Tipo: {grammar.get_type_name()}\n\n")
+        text_area.insert(tk.END, f"No terminales (N): {', '.join(sorted(grammar.N))}\n\n")
+        text_area.insert(tk.END, f"Terminales (T): {', '.join(sorted(grammar.T))}\n\n")
+        text_area.insert(tk.END, f"Símbolo inicial (S): {grammar.S}\n\n")
+        text_area.insert(tk.END, "Producciones (P):\n")
+        for left, prods in sorted(grammar.P.items()):
+            text_area.insert(tk.END, f"  {left} → {' | '.join(prods)}\n")
+        text_area.insert(tk.END, "\n" + "═" * 60)
+        
+        text_area.config(state='disabled')
+        
+        # Botón cerrar
+        ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(
+            row=2, column=0, pady=(10, 0))
+
+
+class SyntaxTreeWindow:
+    def __init__(self, parent, grammar):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Árbol de Síntesis")
+        self.window.geometry("700x600")
+        self.window.transient(parent)
+        
+        # Frame principal
+        main_frame = ttk.Frame(self.window, padding="15")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(1, weight=1)
+        
+        # Título
+        title = ttk.Label(main_frame, text="ÁRBOL DE SÍNTESIS DE LA GRAMÁTICA", 
+                         font=('Arial', 12, 'bold'))
+        title.grid(row=0, column=0, pady=(0, 10))
+        
+        # Área de texto
+        text_area = scrolledtext.ScrolledText(main_frame, wrap=tk.WORD, 
+                                              font=('Courier', 9),
+                                              bg='#ffffff', fg='#000000')
+        text_area.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Contenido
+        text_area.insert(tk.END, "═" * 70 + "\n")
+        text_area.insert(tk.END, f"Gramática: {grammar.get_type_name()}\n")
+        text_area.insert(tk.END, f"Símbolo inicial: {grammar.S}\n\n")
+        text_area.insert(tk.END, "Estructura de producciones:\n\n")
+        
+        # Generar árbol
+        self._print_syntax_tree(grammar, text_area, grammar.S, "", set())
+        
+        text_area.insert(tk.END, "\n" + "═" * 70)
+        text_area.config(state='disabled')
+        
+        # Botón cerrar
+        ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(
+            row=2, column=0, pady=(10, 0))
+    
+    def _print_syntax_tree(self, grammar, text_area, symbol, prefix, visited):
+        """Imprime recursivamente el árbol de síntesis de la gramática"""
+        if symbol in visited:
+            text_area.insert(tk.END, f"{prefix}├─ {symbol} (ya visitado)\n")
+            return
+        
+        if symbol not in grammar.N:
+            text_area.insert(tk.END, f"{prefix}└─ {symbol} (terminal)\n")
+            return
+        
+        visited.add(symbol)
+        
+        if symbol not in grammar.P:
+            text_area.insert(tk.END, f"{prefix}└─ {symbol} (sin producciones)\n")
+            return
+        
+        productions = grammar.P[symbol]
+        text_area.insert(tk.END, f"{prefix}├─ {symbol}\n")
+        
+        for i, prod in enumerate(productions):
+            is_last = (i == len(productions) - 1)
+            connector = "└─" if is_last else "├─"
+            new_prefix = prefix + ("   " if is_last else "│  ")
             
-            try:
-                strings = self.grammar.generate_strings(n)
-                self.write_output(f"\nCadenas generadas ({len(strings)}):\n")
-                for i, s in enumerate(strings, 1):
-                    length = len(s) if s != 'ε' else 0
-                    self.write_output(f"  {i:2d}. '{s}' (longitud: {length})")
-            except Exception as e:
-                self.write_output(f"✗ Error al generar cadenas: {e}")
+            if prod == 'ε':
+                text_area.insert(tk.END, f"{prefix}│  {connector} ε (vacío)\n")
+            else:
+                text_area.insert(tk.END, f"{prefix}│  {connector} {prod}\n")
+                
+                # Analizar símbolos en la producción
+                symbols_in_prod = []
+                for char in prod:
+                    if char in grammar.N or char in grammar.T:
+                        if char not in symbols_in_prod:
+                            symbols_in_prod.append(char)
+                
+                # Expandir símbolos no terminales recursivamente
+                for j, sym in enumerate(symbols_in_prod):
+                    if sym in grammar.N:
+                        symbol_prefix = new_prefix + ("   " if is_last else "│  ")
+                        text_area.insert(tk.END, f"{symbol_prefix}│\n")
+                        self._print_syntax_tree(grammar, text_area, sym, symbol_prefix, visited.copy())
+
+
+class EvaluateResultWindow:
+    def __init__(self, parent, grammar, string):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Resultado de Evaluación")
+        self.window.geometry("650x550")
+        self.window.transient(parent)
+        
+        # Frame principal
+        main_frame = ttk.Frame(self.window, padding="15")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(2, weight=1)
+        
+        # Título
+        title = ttk.Label(main_frame, text="EVALUACIÓN DE CADENA", 
+                         font=('Arial', 12, 'bold'))
+        title.grid(row=0, column=0, pady=(0, 10))
+        
+        # Cadena evaluada
+        cadena_label = ttk.Label(main_frame, 
+                                text=f"Cadena: '{string}'", 
+                                font=('Arial', 10))
+        cadena_label.grid(row=1, column=0, pady=(0, 10))
+        
+        # Área de texto
+        text_area = scrolledtext.ScrolledText(main_frame, wrap=tk.WORD, 
+                                              font=('Courier', 10),
+                                              bg='#ffffff', fg='#000000')
+        text_area.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Evaluar
+        text_area.insert(tk.END, "═" * 60 + "\n")
+        text_area.insert(tk.END, "Analizando...\n\n")
+        
+        try:
+            accepted, tree = grammar.parse(string)
             
-            self.write_output("\n" + "═" * 60)
+            if accepted:
+                text_area.insert(tk.END, "✓ CADENA ACEPTADA\n\n")
+                text_area.insert(tk.END, "Árbol de derivación:\n")
+                text_area.insert(tk.END, "-" * 60 + "\n")
+                text_area.insert(tk.END, grammar.visualize_tree(tree))
+            else:
+                text_area.insert(tk.END, "✗ CADENA RECHAZADA\n\n")
+                text_area.insert(tk.END, "La cadena no pertenece al lenguaje generado por la gramática.\n")
+        except Exception as e:
+            text_area.insert(tk.END, f"✗ Error durante el análisis: {e}\n")
+        
+        text_area.insert(tk.END, "═" * 60)
+        text_area.config(state='disabled')
+        
+        # Botón cerrar
+        ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(
+            row=3, column=0, pady=(10, 0))
+
+
+class GenerateResultWindow:
+    def __init__(self, parent, grammar, n):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Cadenas Generadas")
+        self.window.geometry("550x500")
+        self.window.transient(parent)
+        
+        # Frame principal
+        main_frame = ttk.Frame(self.window, padding="15")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(1, weight=1)
+        
+        # Título
+        title = ttk.Label(main_frame, text=f"GENERACIÓN DE {n} CADENAS MÁS CORTAS", 
+                         font=('Arial', 12, 'bold'))
+        title.grid(row=0, column=0, pady=(0, 10))
+        
+        # Área de texto
+        text_area = scrolledtext.ScrolledText(main_frame, wrap=tk.WORD, 
+                                              font=('Courier', 10),
+                                              bg='#ffffff', fg='#000000')
+        text_area.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Generar cadenas
+        text_area.insert(tk.END, "═" * 60 + "\n")
+        text_area.insert(tk.END, f"Generando las {n} cadenas más cortas del lenguaje...\n\n")
+        
+        try:
+            strings = grammar.generate_strings(n)
+            text_area.insert(tk.END, f"Cadenas generadas ({len(strings)}):\n\n")
+            for i, s in enumerate(strings, 1):
+                length = len(s) if s != 'ε' else 0
+                text_area.insert(tk.END, f"  {i:2d}. '{s}' (longitud: {length})\n")
+        except Exception as e:
+            text_area.insert(tk.END, f"✗ Error al generar cadenas: {e}\n")
+        
+        text_area.insert(tk.END, "\n" + "═" * 60)
+        text_area.config(state='disabled')
+        
+        # Botón cerrar
+        ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(
+            row=2, column=0, pady=(10, 0))
 
 
 class DefineGrammarDialog:
