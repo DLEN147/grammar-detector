@@ -4,7 +4,6 @@ from tkinter import ttk, messagebox, filedialog
 from models.grammar import Grammar
 from data.serializer import save_grammar, load_grammar
 
-# Importar las otras clases del paquete view
 from view.info_window import InfoWindow
 from view.syntax_tree_window import SyntaxTreeWindow
 from view.evaluate_result_window import EvaluateResultWindow
@@ -19,7 +18,7 @@ from typing import Optional
 class GrammarAnalyzerGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Analizador Universal de Gramáticas Formales")
+        self.root.title("Analizador de Gramáticas Formales")
         self.root.geometry("400x450")
         self.root.configure(bg='#f0f0f0')
         self.root.resizable(False, False)
@@ -59,13 +58,13 @@ class GrammarAnalyzerGUI:
         self.status_label.grid(row=1, column=0, pady=(0, 20))
 
         buttons = [
-            ("📝 Definir Nueva Gramática", self.define_grammar),
-            ("📂 Cargar Gramática", self.load_grammar_file),
-            ("💾 Guardar Gramática", self.save_grammar_file),
-            ("ℹ️  Mostrar Información", self.show_grammar_info),
-            ("🌳 Árbol de Síntesis", self.show_syntax_tree),
-            ("✓ Evaluar Cadena", self.evaluate_string),
-            ("🔤 Generar Cadenas", self.generate_strings),
+            ("Definir Nueva Gramática", self.define_grammar),
+            ("Cargar Gramática", self.load_grammar_file),
+            ("Guardar Gramática", self.save_grammar_file),
+            ("Mostrar Información", self.show_grammar_info),
+            ("Árbol de Síntesis", self.show_syntax_tree),
+            ("Evaluar Cadena", self.evaluate_string),
+            ("Generar Cadenas", self.generate_strings),
         ]
 
         for i, (text, command) in enumerate(buttons, start=2):
