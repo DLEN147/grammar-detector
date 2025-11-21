@@ -36,7 +36,10 @@ class SyntaxTreeWindow:
                   font=('Arial', 9, 'bold'), foreground='blue').pack(side=tk.LEFT, padx=5)
         ttk.Label(info_frame, text=f"│", 
                   font=('Arial', 9), foreground='gray').pack(side=tk.LEFT)
-        ttk.Label(info_frame, text=f"Producciones: {sum(len(prods) for prods in grammar.P.values())}", 
+        
+        # Calcular total de producciones
+        total_prods = sum(len(p.rights) for p in grammar.productions)
+        ttk.Label(info_frame, text=f"Producciones: {total_prods}", 
                   font=('Arial', 9)).pack(side=tk.LEFT, padx=5)
 
         # Área de texto con mejor fuente y colores
@@ -109,23 +112,29 @@ class SyntaxTreeWindow:
             return
 
         # Símbolo terminal
-        if symbol not in grammar.N:
+        if symbol not in grammar.symbols.nonterminals:
             text_area.insert(tk.END, f"{prefix}└─ ", 'connector')
             text_area.insert(tk.END, f"'{symbol}'", 'terminal')
             text_area.insert(tk.END, f" (terminal)\n", 'connector')
             return
 
-        # Marcar como visitado
-        visited.add(symbol)
+        # FIX: Marcar como visitado ANTES de continuar
+        new_visited = visited.copy()
+        new_visited.add(symbol)
+
+        # Buscar producciones de este símbolo
+        productions = []
+        for prod in grammar.productions:
+            if prod.left == symbol:
+                productions.extend(prod.rights)
+                break
 
         # Sin producciones
-        if symbol not in grammar.P:
+        if not productions:
             text_area.insert(tk.END, f"{prefix}└─ ", 'connector')
             text_area.insert(tk.END, f"{symbol}", 'nonterminal')
             text_area.insert(tk.END, f" (sin producciones)\n", 'visited')
             return
-
-        productions = grammar.P[symbol]
         
         # Símbolo raíz o no terminal
         if is_root:
@@ -155,9 +164,9 @@ class SyntaxTreeWindow:
 
             # Mostrar la producción completa
             for char in prod:
-                if char in grammar.N:
+                if char in grammar.symbols.nonterminals:
                     text_area.insert(tk.END, f"{char}", 'nonterminal')
-                elif char in grammar.T:
+                elif char in grammar.symbols.terminals:
                     text_area.insert(tk.END, f"{char}", 'terminal')
                 else:
                     text_area.insert(tk.END, f"{char}", 'production')
@@ -169,7 +178,7 @@ class SyntaxTreeWindow:
             nonterminals_in_prod = []
             
             for char in prod:
-                if char in grammar.N and char not in symbols_seen:
+                if char in grammar.symbols.nonterminals and char not in symbols_seen:
                     symbols_seen.add(char)
                     nonterminals_in_prod.append(char)
 
@@ -181,4 +190,5 @@ class SyntaxTreeWindow:
                     text_area.insert(tk.END, f"{new_prefix}│\n", 'connector')
                 
                 symbol_prefix = new_prefix + ("   " if is_last_prod else "│  ")
-                self._print_syntax_tree(grammar, text_area, sym, symbol_prefix, visited.copy())
+                # FIX: Usar new_visited en lugar de visited.copy()
+                self._print_syntax_tree(grammar, text_area, sym, symbol_prefix, new_visited)

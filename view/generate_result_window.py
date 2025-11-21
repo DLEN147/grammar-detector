@@ -32,19 +32,25 @@ class GenerateResultWindow:
         )
         text_area.grid(row=1, column=0, sticky="nsew")
 
-        text_area.insert(tk.END, "═" * 60 + "\n")
+        text_area.insert(tk.END, "╔" + "═" * 58 + "╗\n")
         text_area.insert(tk.END, f"Generando las {n} cadenas más cortas del lenguaje...\n\n")
 
         try:
             strings = grammar.generate_strings(n)
             text_area.insert(tk.END, f"Cadenas generadas ({len(strings)}):\n\n")
             for i, s in enumerate(strings, 1):
-                length = len(s) if s != 'ε' else 0
-                text_area.insert(tk.END, f"  {i:2d}. '{s}' (longitud: {length})\n")
+                # FIX: Mostrar mejor la cadena vacía
+                if s == 'ε' or s == '':
+                    display = 'ε (cadena vacía)'
+                    length = 0
+                else:
+                    display = f"'{s}'"
+                    length = len(s)
+                text_area.insert(tk.END, f"  {i:2d}. {display:<30} longitud: {length}\n")
         except Exception as e:
             text_area.insert(tk.END, f"✗ Error al generar cadenas: {e}\n")
 
-        text_area.insert(tk.END, "\n" + "═" * 60)
+        text_area.insert(tk.END, "\n" + "╚" + "═" * 58 + "╝")
         text_area.config(state='disabled')
 
         ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(

@@ -32,17 +32,35 @@ class InfoWindow:
         )
         text_area.grid(row=1, column=0, sticky="nsew")
 
-        text_area.insert(tk.END, "═" * 60 + "\n")
-        text_area.insert(tk.END, f"Tipo: {grammar.get_type_name()}\n\n")
-        text_area.insert(tk.END, f"No terminales (N): {', '.join(sorted(grammar.N))}\n\n")
-        text_area.insert(tk.END, f"Terminales (T): {', '.join(sorted(grammar.T))}\n\n")
+        text_area.insert(tk.END, "╔" + "═" * 58 + "╗\n")
+        text_area.insert(tk.END, f"║ Tipo: {grammar.get_type_name():<50} ║\n")
+        text_area.insert(tk.END, "╚" + "═" * 58 + "╝\n\n")
+        
+        # Usar symbols.nonterminals y symbols.terminals
+        text_area.insert(tk.END, f"No terminales (N): {', '.join(sorted(grammar.symbols.nonterminals))}\n\n")
+        text_area.insert(tk.END, f"Terminales (T): {', '.join(sorted(grammar.symbols.terminals))}\n\n")
         text_area.insert(tk.END, f"Símbolo inicial (S): {grammar.S}\n\n")
+        
         text_area.insert(tk.END, "Producciones (P):\n")
+        text_area.insert(tk.END, "─" * 60 + "\n")
 
-        for left, prods in sorted(grammar.P.items()):
-            text_area.insert(tk.END, f"  {left} → {' | '.join(prods)}\n")
+        # Usar la lista de objetos Production
+        for prod in grammar.productions:
+            text_area.insert(tk.END, f"  {prod}\n")
 
-        text_area.insert(tk.END, "\n" + "═" * 60)
+        text_area.insert(tk.END, "\n" + "═" * 60 + "\n")
+        
+        # Información adicional
+        total_prods = sum(len(p.rights) for p in grammar.productions)
+        text_area.insert(tk.END, f"\nEstadísticas:\n")
+        text_area.insert(tk.END, f"  • Total de producciones: {total_prods}\n")
+        text_area.insert(tk.END, f"  • No terminales: {len(grammar.symbols.nonterminals)}\n")
+        text_area.insert(tk.END, f"  • Terminales: {len(grammar.symbols.terminals)}\n")
+        
+        # Información específica según el tipo
+        if grammar.type == 3 and grammar.grammar_style:
+            text_area.insert(tk.END, f"  • Estilo: {grammar.grammar_style}-linear\n")
+
         text_area.config(state='disabled')
 
         ttk.Button(main_frame, text="Cerrar", command=self.window.destroy).grid(

@@ -108,6 +108,9 @@ class GrammarAnalyzerGUI:
                 self.update_status()
                 messagebox.showinfo("Éxito",
                                     f"Gramática creada exitosamente\n\n{self.grammar.get_type_name()}")
+            except ValueError as e:
+                # Mostrar errores de validación de manera amigable
+                messagebox.showerror("Error de Validación", str(e))
             except Exception as e:
                 messagebox.showerror("Error", f"Error al crear gramática: {e}")
 
@@ -122,6 +125,8 @@ class GrammarAnalyzerGUI:
                 self.update_status()
                 messagebox.showinfo("Éxito",
                                     f"Gramática cargada exitosamente\n\n{self.grammar.get_type_name()}")
+            except ValueError as e:
+                messagebox.showerror("Error de Validación", str(e))
             except Exception as e:
                 messagebox.showerror("Error", f"Error al cargar: {e}")
 
@@ -181,7 +186,3 @@ def run_gui():
     root = tk.Tk()
     app = GrammarAnalyzerGUI(root)
     root.mainloop()
-
-
-if __name__ == "__main__":
-    run_gui()

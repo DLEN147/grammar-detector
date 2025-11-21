@@ -19,7 +19,7 @@ class EvaluateStringDialog:
         ttk.Label(main_frame, text="Ingrese la cadena a evaluar:").grid(
             row=0, column=0, sticky=tk.W, pady=5
         )
-        ttk.Label(main_frame, text="(Use 'ε' para cadena vacía)",
+        ttk.Label(main_frame, text="(Use 'ε' o deje vacío para cadena vacía)",
                   font=('Arial', 8, 'italic')).grid(row=1, column=0, sticky=tk.W)
 
         self.string_entry = ttk.Entry(main_frame, width=40, font=('Courier', 11))
@@ -37,7 +37,14 @@ class EvaluateStringDialog:
         self.string_entry.bind('<Return>', lambda e: self.evaluate())
 
     def evaluate(self):
-        self.result = self.string_entry.get()
+        # FIX: Convertir epsilon a cadena vacía
+        raw_input = self.string_entry.get()
+        
+        if raw_input == 'ε' or raw_input.lower() == 'epsilon' or raw_input == '':
+            self.result = ''
+        else:
+            self.result = raw_input
+        
         self.top.destroy()
 
     def center_window(self, window, width, height):
