@@ -19,11 +19,11 @@ class GrammarAnalyzerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Analizador de Gramáticas Formales")
-        self.root.geometry("400x450")
+        self.root.geometry("400x550")
         self.root.configure(bg='#f0f0f0')
         self.root.resizable(False, False)
 
-        self.center_window(self.root, 400, 450)
+        self.center_window(self.root, 400, 550)
         self.grammar: Optional[Grammar] = None
 
         style = ttk.Style()
@@ -185,4 +185,5 @@ class GrammarAnalyzerGUI:
 def run_gui():
     root = tk.Tk()
     app = GrammarAnalyzerGUI(root)
+
     root.mainloop()
