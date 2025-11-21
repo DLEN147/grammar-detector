@@ -1,0 +1,43 @@
+{
+  "nonterminals": [
+    "F",
+    "S",
+    "E",
+    "D",
+    "B",
+    "C",
+    "A"
+  ],
+  "terminals": [
+    "b",
+    "a"
+  ],
+  "productions": {
+    "S": [
+      "aSbS",
+      "bSaS",
+      "A"
+    ],
+    "A": [
+      "B"
+    ],
+    "B": [
+      "C"
+    ],
+    "C": [
+      "D"
+    ],
+    "D": [
+      "E"
+    ],
+    "E": [
+      "F"
+    ],
+    "F": [
+      "ε"
+    ]
+  },
+  "start_symbol": "S",
+  "type": 2,
+  "grammar_style": "context_free"
+}
